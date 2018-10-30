@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 
@@ -11,6 +12,8 @@ public class FileReader
 {
     private static final String bucket = System.getenv("AWS_BUCKET");
     private static final String locationsFileName = "locations.json";
+
+    private static final Logger LOGGER = Logger.getLogger(FileReader.class);
 
     public static String readLocationsFile()
     {
