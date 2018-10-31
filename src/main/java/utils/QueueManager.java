@@ -29,8 +29,29 @@ public class QueueManager
 
     private static String currentQueueUrl;
 
+    private static void deleteUnusedQueues()
+    {
+        for(final String queueUrl : sqs.listQueues().getQueueUrls())
+        {
+            LOGGER.info("Found existing queue: " + queueUrl);
+            if(queueUrl.contains(System.getenv("AWS_QUEUE_NAME")))
+            {
+                try
+                {
+                    sqs.deleteQueue(queueUrl);
+                    LOGGER.info("Deleted unused queue: " + queueUrl);
+                }
+                catch(Exception e)
+                {
+                    LOGGER.error("Could not delete queue " + queueUrl + ": " + e);
+                }
+            }
+        }
+    }
+
     public static void createNewQueue()
     {
+        deleteUnusedQueues();
         try
         {
             final CreateQueueRequest createQueueRequest = new CreateQueueRequest(queueName);
