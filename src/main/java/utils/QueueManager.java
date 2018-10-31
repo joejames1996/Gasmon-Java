@@ -9,10 +9,14 @@ import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.amazonaws.services.sqs.model.DeleteQueueRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import models.Notification;
 import org.apache.log4j.Logger;
 import states.CurrentState;
 import states.State;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -120,19 +124,13 @@ public class QueueManager
                     {
                         for (final Message message : messages)
                         {
-                            System.out.println();
-                            System.out.println("Message :");
-                            System.out.println("    MessageId : " + message.getMessageId());
-                            System.out.println("    ReceiptHandle : " + message.getReceiptHandle());
-                            System.out.println("    MD5OfBody : " + message.getMD5OfBody());
-                            System.out.println("    Body : " + message.getBody());
+                            String body = message.getBody();
+                            Notification notification = new Gson().fromJson(body, Notification.class);
+                            Notification.addNewNotificationToList(notification);
 
-                            for (final Map.Entry<String, String> entry : message.getAttributes().entrySet())
-                            {
-                                System.out.println("Attribute :");
-                                System.out.println("    Name : " + entry.getKey());
-                                System.out.println("    Value : " + entry.getValue());
-                            }
+                            LOGGER.info("Created notification:\n" + notification.toString());
+
+                            notification.createEventFromNotification();
                         }
                     }
                     else

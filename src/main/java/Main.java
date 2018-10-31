@@ -2,6 +2,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import states.CurrentState;
 import states.State;
+import utils.FileReader;
 import utils.QueueManager;
 
 public class Main
@@ -20,6 +21,8 @@ public class Main
         QueueManager.subscribeQueueToTopic();
 
         Runtime.getRuntime().addShutdownHook(new Thread(cleanupRunnable));
+
+        FileReader.parseLocationsFile();
 
         CurrentState.setCurrentState(State.RECEIVING_MESSAGES);
         Thread receiveAndPrintMessagesThread = new Thread(receiveAndPrintMessagesRunnable);

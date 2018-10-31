@@ -4,9 +4,16 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import models.Location;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class FileReader
 {
@@ -51,7 +58,19 @@ public class FileReader
                 }
             }
         }
-
         return sb.toString();
+    }
+
+    public static void parseLocationsFile()
+    {
+        final String fileContents = readLocationsFile();
+        Type targetClassType = new TypeToken<ArrayList<Location>>() {}.getType();
+        Collection<Location> locationCollection = new Gson().fromJson(fileContents, targetClassType);
+        Location.setLocations((List<Location>)locationCollection);
+
+        for(Location location : Location.getLocations())
+        {
+            LOGGER.info("Created location -- " + location.toString());
+        }
     }
 }
