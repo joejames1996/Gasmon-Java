@@ -1,3 +1,4 @@
+import events.ProcessEvent;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import states.CurrentState;
@@ -11,6 +12,7 @@ public class Main
     private static final Runnable receiveAndPrintMessagesRunnable = () -> QueueManager.receiveAndPrintMessages();
     private static final Runnable oldValueRemoverRunnable = () -> OldValueRemover.removeOldValues();
     private static final Runnable cleanupRunnable = () -> cleanup();
+    private static final Runnable averageValuesRunnable = () -> ProcessEvent.readyProcessEvent();
 
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
@@ -27,8 +29,10 @@ public class Main
         FileReader.parseLocationsFile();
 
         CurrentState.setCurrentState(State.RECEIVING_MESSAGES);
+        Thread averageValuesThread = new Thread(averageValuesRunnable);
         Thread oldValueRemoverThread = new Thread(oldValueRemoverRunnable);
         Thread receiveAndPrintMessagesThread = new Thread(receiveAndPrintMessagesRunnable);
+        averageValuesThread.start();
         oldValueRemoverThread.start();
         receiveAndPrintMessagesThread.start();
     }

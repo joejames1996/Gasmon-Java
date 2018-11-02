@@ -18,10 +18,12 @@ public class OldValueRemover
             {
                 Thread.sleep(10000);
 
-                LOGGER.info("Removing old values... Notifications size before: " + Notification.getNotifications().size() + " | Events size before: " + Event.getEventList().size());
-                Notification.removeOldValues();
+//                LOGGER.info("Removing old values... Notifications size before: " + Notification.getNotifications().size() + " | Events size before: " + Event.getEventList().size());
+                LOGGER.info("Removing old values... Events size before: " + Event.getEventList().size());
+                //Notification.removeOldValues();
                 Event.removeOldValues();
-                LOGGER.info("Removed old values... Notifications size after: " + Notification.getNotifications().size() + " | Events size after: " + Event.getEventList().size());
+//                LOGGER.info("Removed old values... Notifications size after: " + Notification.getNotifications().size() + " | Events size after: " + Event.getEventList().size());
+                LOGGER.info("Removed old values... Events size after: " + Event.getEventList().size());
 
             }
             catch(Exception e)

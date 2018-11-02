@@ -1,9 +1,14 @@
 package models;
 
 import com.google.gson.Gson;
+import events.ProcessEvent;
 import org.apache.log4j.Logger;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Notification
@@ -20,7 +25,7 @@ public class Notification
 
     private long timeCreated;
 
-    private static List<Notification> notifications = new ArrayList<>();
+    //private static List<Notification> notifications = new ArrayList<>();
 
     private static final Logger LOGGER = Logger.getLogger(Notification.class);
 
@@ -37,15 +42,15 @@ public class Notification
         this.UnsubscribeURL = unsubscribeUrl;
     }
 
-    public static List<Notification> getNotifications()
-    {
-        return notifications;
-    }
-
-    public static void addNewNotificationToList(Notification notification)
-    {
-        notifications.add(notification);
-    }
+//    public static List<Notification> getNotifications()
+//    {
+//        return notifications;
+//    }
+//
+//    public static void addNewNotificationToList(Notification notification)
+//    {
+//        notifications.add(notification);
+//    }
 
     public String getType()
     {
@@ -160,10 +165,28 @@ public class Notification
         }
     }
 
-    public static void removeOldValues()
+//    public static void removeOldValues()
+//    {
+//        //long currentTime = (System.currentTimeMillis() / 1000L);
+//        notifications.removeIf(n -> (n.getTimestampAsLong() < ProcessEvent.getTimestamp()));
+//    }
+
+    public long getTimestampAsLong()
     {
-        long currentTime = (System.currentTimeMillis() / 1000L);
-        notifications.removeIf(n -> (n.timeCreated < currentTime - 300L));
+        LOGGER.debug("Converting " + this.Timestamp + " ...");
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Date parsedDate = dateFormat.parse(this.Timestamp);
+            java.sql.Timestamp timestamp = new Timestamp(parsedDate.getTime());
+            LOGGER.debug("...to " + timestamp.getTime());
+            return timestamp.getTime();
+        }
+        catch(Exception e)
+        {
+            LOGGER.error(e);
+        }
+        return 0L;
     }
 
     @Override
