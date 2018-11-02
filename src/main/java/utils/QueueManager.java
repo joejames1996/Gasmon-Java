@@ -119,10 +119,9 @@ public class QueueManager
                 Thread.sleep(1000);
                 if (currentQueueUrl != null)
                 {
-//                    ReceiveMessageRequest request = new ReceiveMessageRequest(currentQueueUrl).withMessageAttributeNames("ALL");
-//                    request.setMaxNumberOfMessages(10);
-//                    List<Message> messages = sqs.receiveMessage(request).getMessages();
-                    List<Message> messages = sqs.receiveMessage(new ReceiveMessageRequest(currentQueueUrl)).getMessages();
+                    ReceiveMessageRequest request = new ReceiveMessageRequest(currentQueueUrl).withMessageAttributeNames("ALL");
+                    request.setMaxNumberOfMessages(10);
+                    List<Message> messages = sqs.receiveMessage(request).getMessages();
                     if (messages.size() > 0)
                     {
                         for (final Message message : messages)
