@@ -3,6 +3,7 @@ package models;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,8 @@ public class Notification
     private String Signature;
     private String SigningCertURL;
     private String UnsubscribeURL;
+
+    private long timeCreated;
 
     private static List<Notification> notifications = new ArrayList<>();
 
@@ -135,22 +138,33 @@ public class Notification
         this.UnsubscribeURL = unsubscribeURL;
     }
 
+    public void setTimeCreated()
+    {
+        this.timeCreated = (System.currentTimeMillis() / 1000L);
+    }
+
     public void createEventFromNotification()
     {
         Event event = new Gson().fromJson(this.Message, Event.class);
+        event.setTimeCreated();
 
         if(!event.alreadyExists())
         {
+            event.setLocationForEvent();
             Event.addNewEventToList(event);
 
             LOGGER.info("Created new event:\n" + event.toString());
-
-            event.setLocationForEvent();
         }
         else
         {
             LOGGER.info(event.toString() + "\n...already exists and was not remade.");
         }
+    }
+
+    public static void removeOldValues()
+    {
+        long currentTime = (System.currentTimeMillis() / 1000L);
+        notifications.removeIf(n -> (n.timeCreated < currentTime - 300L));
     }
 
     @Override

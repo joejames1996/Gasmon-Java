@@ -12,6 +12,8 @@ public class Event
 
     private Location location = null;
 
+    private long timeCreated;
+
     private static List<Event> eventList = new ArrayList<>();
 
     public Event(String locationId, String eventId, float value, long timestamp)
@@ -72,6 +74,11 @@ public class Event
         this.timestamp = timestamp;
     }
 
+    public void setTimeCreated()
+    {
+        this.timeCreated = (System.currentTimeMillis() / 1000L);
+    }
+
     public void setLocationForEvent()
     {
         for(Location location : Location.getLocations())
@@ -92,6 +99,12 @@ public class Event
                 return true;
         }
         return false;
+    }
+
+    public static void removeOldValues()
+    {
+        long currentTime = (System.currentTimeMillis() / 1000L);
+        eventList.removeIf(e -> (e.timeCreated < currentTime - 300L));
     }
 
     @Override

@@ -119,6 +119,9 @@ public class QueueManager
                 Thread.sleep(1000);
                 if (currentQueueUrl != null)
                 {
+//                    ReceiveMessageRequest request = new ReceiveMessageRequest(currentQueueUrl).withMessageAttributeNames("ALL");
+//                    request.setMaxNumberOfMessages(10);
+//                    List<Message> messages = sqs.receiveMessage(request).getMessages();
                     List<Message> messages = sqs.receiveMessage(new ReceiveMessageRequest(currentQueueUrl)).getMessages();
                     if (messages.size() > 0)
                     {
@@ -126,11 +129,11 @@ public class QueueManager
                         {
                             String body = message.getBody();
                             Notification notification = new Gson().fromJson(body, Notification.class);
+                            notification.setTimeCreated();
+                            notification.createEventFromNotification();
                             Notification.addNewNotificationToList(notification);
 
                             LOGGER.info("Created notification:\n" + notification.toString());
-
-                            notification.createEventFromNotification();
                         }
                     }
                     else
