@@ -108,10 +108,10 @@ public class Event
         return false;
     }
 
-    public static void removeOldValues()
+    public static void removeOldValues(List<Event> eventsToRemove)
     {
         long currentTime = (System.currentTimeMillis() / 1000L);
-        eventList.removeIf(e -> OldValueRemover.getEventsToRemove().contains(e));
+        eventList.removeIf(e -> eventsToRemove.contains(e));
     }
 
     @Override
