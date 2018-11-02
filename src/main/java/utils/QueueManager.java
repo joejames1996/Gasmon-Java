@@ -132,7 +132,7 @@ public class QueueManager
                             notification.createEventFromNotification();
                             Notification.addNewNotificationToList(notification);
 
-                            LOGGER.info("Created notification:\n" + notification.toString());
+                            LOGGER.debug("Created notification:\n" + notification.toString());
                         }
                     }
                     else

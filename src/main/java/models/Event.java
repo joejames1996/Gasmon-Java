@@ -1,5 +1,7 @@
 package models;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,8 @@ public class Event
     private long timeCreated;
 
     private static List<Event> eventList = new ArrayList<>();
+
+    private static final Logger LOGGER = Logger.getLogger(Event.class);
 
     public Event(String locationId, String eventId, float value, long timestamp)
     {
@@ -85,7 +89,9 @@ public class Event
         {
             if(location.getId().equals(this.locationId))
             {
+                LOGGER.info("Event:\n" + this.toString() + "\nfound matching location:\n" + location.toString());
                 this.location = location;
+                break;
             }
         }
     }

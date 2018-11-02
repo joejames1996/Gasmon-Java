@@ -153,11 +153,11 @@ public class Notification
             event.setLocationForEvent();
             Event.addNewEventToList(event);
 
-            LOGGER.info("Created new event:\n" + event.toString());
+            LOGGER.debug("Created new event:\n" + event.toString());
         }
         else
         {
-            LOGGER.info(event.toString() + "\n...already exists and was not remade.");
+            LOGGER.debug(event.toString() + "\n...already exists and was not remade.");
         }
     }
 
