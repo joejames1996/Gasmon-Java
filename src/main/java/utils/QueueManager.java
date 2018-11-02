@@ -5,26 +5,20 @@ import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
 import com.amazonaws.services.sns.util.Topics;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
-import com.amazonaws.services.sqs.model.CreateQueueRequest;
-import com.amazonaws.services.sqs.model.DeleteQueueRequest;
-import com.amazonaws.services.sqs.model.Message;
-import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.amazonaws.services.sqs.model.*;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import models.Notification;
 import org.apache.log4j.Logger;
 import states.CurrentState;
 import states.State;
 
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class QueueManager
 {
     private static final Random random = new Random();
-    private static final String queueName = System.getenv("AWS_QUEUE_NAME") + "-" + random.nextInt(999999);
+    private static String queueName;
     private static final String topicArn = System.getenv("AWS_TOPIC_ARN");
     private static final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
     private static final AmazonSNS sns = AmazonSNSAsyncClientBuilder.defaultClient();
@@ -32,6 +26,11 @@ public class QueueManager
     private static final Logger LOGGER = Logger.getLogger(QueueManager.class);
 
     private static String currentQueueUrl;
+
+    private static void createNewQueueName()
+    {
+        queueName = System.getenv("AWS_QUEUE_NAME") + "-" + random.nextInt(999999);
+    }
 
     private static void deleteUnusedQueues()
     {
@@ -56,6 +55,7 @@ public class QueueManager
     public static void createNewQueue()
     {
         deleteUnusedQueues();
+        createNewQueueName();
         try
         {
             final CreateQueueRequest createQueueRequest = new CreateQueueRequest(queueName);
@@ -145,6 +145,13 @@ public class QueueManager
                     LOGGER.error("Can't receive messages (currentQueueUrl is null).");
                 }
             }
+        }
+        catch(QueueDoesNotExistException e)
+        {
+            LOGGER.error("Queue no longer exists, creating it again...");
+            createNewQueue();
+            subscribeQueueToTopic();
+            receiveAndPrintMessages();
         }
         catch(Exception e)
         {

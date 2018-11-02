@@ -3,7 +3,6 @@ package models;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
