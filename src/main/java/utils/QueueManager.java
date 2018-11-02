@@ -130,7 +130,7 @@ public class QueueManager
                             Notification notification = new Gson().fromJson(body, Notification.class);
                             notification.setTimeCreated();
                             notification.createEventFromNotification();
-                            Notification.addNewNotificationToList(notification);
+                            //Notification.addNewNotificationToList(notification);
 
                             LOGGER.debug("Created notification:\n" + notification.toString());
                         }

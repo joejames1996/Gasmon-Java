@@ -20,7 +20,7 @@ public class Notification
 
     private long timeCreated;
 
-    private static List<Notification> notifications = new ArrayList<>();
+    //private static List<Notification> notifications = new ArrayList<>();
 
     private static final Logger LOGGER = Logger.getLogger(Notification.class);
 
@@ -37,15 +37,15 @@ public class Notification
         this.UnsubscribeURL = unsubscribeUrl;
     }
 
-    public static List<Notification> getNotifications()
-    {
-        return notifications;
-    }
-
-    public static void addNewNotificationToList(Notification notification)
-    {
-        notifications.add(notification);
-    }
+//    public static List<Notification> getNotifications()
+//    {
+//        return notifications;
+//    }
+//
+//    public static void addNewNotificationToList(Notification notification)
+//    {
+//        notifications.add(notification);
+//    }
 
     public String getType()
     {
@@ -160,11 +160,11 @@ public class Notification
         }
     }
 
-    public static void removeOldValues()
-    {
-        long currentTime = (System.currentTimeMillis() / 1000L);
-        notifications.removeIf(n -> (n.timeCreated < currentTime - 300L));
-    }
+//    public static void removeOldValues()
+//    {
+//        long currentTime = (System.currentTimeMillis() / 1000L);
+//        notifications.removeIf(n -> (n.timeCreated < currentTime - 300L));
+//    }
 
     @Override
     public String toString()

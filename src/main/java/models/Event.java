@@ -1,6 +1,7 @@
 package models;
 
 import org.apache.log4j.Logger;
+import utils.OldValueRemover;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,7 @@ public class Event
     public static void removeOldValues()
     {
         long currentTime = (System.currentTimeMillis() / 1000L);
-        eventList.removeIf(e -> (e.timeCreated < currentTime - 300L));
+        eventList.removeIf(e -> OldValueRemover.getEventsToRemove().contains(e));
     }
 
     @Override
